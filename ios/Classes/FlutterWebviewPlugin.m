@@ -139,6 +139,7 @@ static WKProcessPool* processPool = [[WKProcessPool alloc] init];
     WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
     configuration.userContentController = userContentController;
     configuration.processPool = processPool;
+    NSLog(@"Help me %@",processPool);
     self.webview = [[WKWebView alloc] initWithFrame:rc configuration:configuration];
     self.webview.UIDelegate = self;
     self.webview.navigationDelegate = self;
