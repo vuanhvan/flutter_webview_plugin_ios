@@ -2,7 +2,6 @@
 #import "WebviewJavaScriptChannelHandler.h"
 
 static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
-static WKProcessPool* processPool = [[WKProcessPool alloc] init];
 
 // UIWebViewDelegate
 @interface FlutterWebviewPlugin() <WKNavigationDelegate, UIScrollViewDelegate, WKUIDelegate> {
@@ -11,6 +10,7 @@ static WKProcessPool* processPool = [[WKProcessPool alloc] init];
     NSString* _invalidUrlRegex;
     NSMutableSet* _javaScriptChannelNames;
     NSNumber*  _ignoreSSLErrors;
+    WKProcessPool* _processPool;
 }
 @end
 	
@@ -30,6 +30,7 @@ static WKProcessPool* processPool = [[WKProcessPool alloc] init];
     self = [super init];
     if (self) {
         self.viewController = viewController;
+        _processPool = [[WKProcessPool alloc] init];
     }
     return self;
 }
@@ -136,8 +137,8 @@ static WKProcessPool* processPool = [[WKProcessPool alloc] init];
 
     WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
     configuration.userContentController = userContentController;
-    configuration.processPool = processPool;
-    NSLog(@"Help me %@",processPool);
+    configuration.processPool = _processPool;
+    NSLog(@"Help me %@", _processPool);
     self.webview = [[WKWebView alloc] initWithFrame:rc configuration:configuration];
     self.webview.UIDelegate = self;
     self.webview.navigationDelegate = self;
