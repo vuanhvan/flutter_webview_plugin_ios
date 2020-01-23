@@ -19,8 +19,6 @@ static WKProcessPool* processPool = [[WKProcessPool alloc] init];
     channel = [FlutterMethodChannel
                methodChannelWithName:CHANNEL_NAME
                binaryMessenger:[registrar messenger]];
-
-    processPool = [[WKProcessPool alloc] init];
 	
     UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
     FlutterWebviewPlugin* instance = [[FlutterWebviewPlugin alloc] initWithViewController:viewController];
