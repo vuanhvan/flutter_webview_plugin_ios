@@ -90,7 +90,6 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
   @override
   void initState() {
     super.initState();
-    print('Help me!!!');
     webviewReference.close();
 
     _onBack = webviewReference.onBack.listen((_) async {
