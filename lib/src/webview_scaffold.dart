@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
 import 'package:flutter_webview_plugin/src/javascript_channel.dart';
 
 import 'base.dart';
 
 class WebviewScaffold extends StatefulWidget {
   const WebviewScaffold({
-    Key key,
+    Key? key,
     this.appBar,
-    @required this.url,
+    required this.url,
     this.headers,
     this.javascriptChannels,
     this.withJavascript,
@@ -34,6 +34,7 @@ class WebviewScaffold extends StatefulWidget {
     this.supportMultipleWindows,
     this.appCacheEnabled,
     this.hidden = false,
+    this.onBackPress,
     this.initialChild,
     this.allowFileURLs,
     this.resizeToAvoidBottomInset = false,
@@ -43,37 +44,38 @@ class WebviewScaffold extends StatefulWidget {
     this.ignoreSSLErrors = false,
   }) : super(key: key);
 
-  final PreferredSizeWidget appBar;
+  final PreferredSizeWidget? appBar;
   final String url;
-  final Map<String, String> headers;
-  final Set<JavascriptChannel> javascriptChannels;
-  final bool withJavascript;
-  final bool clearCache;
-  final bool clearCookies;
-  final bool mediaPlaybackRequiresUserGesture;
-  final bool enableAppScheme;
-  final String userAgent;
-  final bool primary;
-  final List<Widget> persistentFooterButtons;
-  final Widget bottomNavigationBar;
-  final bool withZoom;
-  final bool displayZoomControls;
-  final bool withLocalStorage;
-  final bool withLocalUrl;
-  final String localUrlScope;
-  final bool scrollBar;
-  final bool supportMultipleWindows;
-  final bool appCacheEnabled;
-  final bool hidden;
-  final Widget initialChild;
-  final bool allowFileURLs;
-  final bool resizeToAvoidBottomInset;
-  final String invalidUrlRegex;
-  final bool geolocationEnabled;
-  final bool withOverviewMode;
-  final bool useWideViewPort;
-  final bool debuggingEnabled;
-  final bool ignoreSSLErrors;
+  final Map<String, String>? headers;
+  final Set<JavascriptChannel>? javascriptChannels;
+  final bool? withJavascript;
+  final bool? clearCache;
+  final bool? clearCookies;
+  final bool? mediaPlaybackRequiresUserGesture;
+  final bool? enableAppScheme;
+  final String? userAgent;
+  final bool? primary;
+  final Function? onBackPress;
+  final List<Widget>? persistentFooterButtons;
+  final Widget? bottomNavigationBar;
+  final bool? withZoom;
+  final bool? displayZoomControls;
+  final bool? withLocalStorage;
+  final bool? withLocalUrl;
+  final String? localUrlScope;
+  final bool? scrollBar;
+  final bool? supportMultipleWindows;
+  final bool? appCacheEnabled;
+  final bool? hidden;
+  final Widget? initialChild;
+  final bool? allowFileURLs;
+  final bool? resizeToAvoidBottomInset;
+  final String? invalidUrlRegex;
+  final bool? geolocationEnabled;
+  final bool? withOverviewMode;
+  final bool? useWideViewPort;
+  final bool? debuggingEnabled;
+  final bool? ignoreSSLErrors;
 
   @override
   _WebviewScaffoldState createState() => _WebviewScaffoldState();
@@ -81,11 +83,13 @@ class WebviewScaffold extends StatefulWidget {
 
 class _WebviewScaffoldState extends State<WebviewScaffold> {
   final webviewReference = FlutterWebviewPlugin();
-  Rect _rect;
-  Timer _resizeTimer;
-  StreamSubscription<WebViewStateChanged> _onStateChanged;
+  Rect? _rect;
+  Timer? _resizeTimer;
+  StreamSubscription<WebViewStateChanged>? _onStateChanged;
 
   var _onBack;
+
+  bool get hidden => widget.hidden??false;
 
   @override
   void initState() {
@@ -96,27 +100,30 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
       if (!mounted) {
         return;
       }
-
-      // The willPop/pop pair here is equivalent to Navigator.maybePop(),
-      // which is what's called from the flutter back button handler.
-      final pop = await _topMostRoute.willPop();
-      if (pop == RoutePopDisposition.pop) {
-        // Close the webview if it's on the route at the top of the stack.
-        final isOnTopMostRoute = _topMostRoute == ModalRoute.of(context);
-        if (isOnTopMostRoute) {
-          webviewReference.close();
+      if (widget.onBackPress != null) {
+        widget.onBackPress!();
+      } else {
+        // The willPop/pop pair here is equivalent to Navigator.maybePop(),
+        // which is what's called from the flutter back button handler.
+        final pop = await _topMostRoute.willPop();
+        if (pop == RoutePopDisposition.pop) {
+          // Close the webview if it's on the route at the top of the stack.
+          final isOnTopMostRoute = _topMostRoute == ModalRoute.of(context);
+          if (isOnTopMostRoute) {
+            webviewReference.close();
+          }
+          Navigator.pop(context);
         }
-        Navigator.pop(context);
       }
     });
 
-    if (widget.hidden) {
+    if (hidden) {
       _onStateChanged =
           webviewReference.onStateChanged.listen((WebViewStateChanged state) {
-        if (state.type == WebViewState.finishLoad) {
-          webviewReference.show();
-        }
-      });
+            if (state.type == WebViewState.finishLoad) {
+              webviewReference.show();
+            }
+          });
     }
   }
 
@@ -136,8 +143,8 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
     _onBack?.cancel();
     _resizeTimer?.cancel();
     webviewReference.close();
-    if (widget.hidden) {
-      _onStateChanged.cancel();
+    if (hidden) {
+      _onStateChanged?.cancel();
     }
     webviewReference.dispose();
   }
@@ -201,9 +208,9 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
 
 class _WebviewPlaceholder extends SingleChildRenderObjectWidget {
   const _WebviewPlaceholder({
-    Key key,
-    @required this.onRectChanged,
-    Widget child,
+    Key? key,
+    required this.onRectChanged,
+    Widget? child,
   }) : super(key: key, child: child);
 
   final ValueChanged<Rect> onRectChanged;
@@ -224,15 +231,15 @@ class _WebviewPlaceholder extends SingleChildRenderObjectWidget {
 
 class _WebviewPlaceholderRender extends RenderProxyBox {
   _WebviewPlaceholderRender({
-    RenderBox child,
-    ValueChanged<Rect> onRectChanged,
+    RenderBox? child,
+    ValueChanged<Rect>? onRectChanged,
   })  : _callback = onRectChanged,
         super(child);
 
-  ValueChanged<Rect> _callback;
-  Rect _rect;
+  ValueChanged<Rect>? _callback;
+  Rect? _rect;
 
-  Rect get rect => _rect;
+  Rect? get rect => _rect;
 
   set onRectChanged(ValueChanged<Rect> callback) {
     if (callback != _callback) {
@@ -243,7 +250,7 @@ class _WebviewPlaceholderRender extends RenderProxyBox {
 
   void notifyRect() {
     if (_callback != null && _rect != null) {
-      _callback(_rect);
+      _callback!(_rect!);
     }
   }
 

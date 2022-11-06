@@ -8,6 +8,7 @@ import android.content.Context;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,11 +150,17 @@ class WebviewManager {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     switch (keyCode) {
                         case KeyEvent.KEYCODE_BACK:
-                            if (webView.canGoBack()) {
-                                webView.goBack();
-                            } else {
+                            Log.w("WebviewManager"," setOnKeyListener back button click -> back");
+//                            if ( webView.canGoBack()) {
+//                                Log.w("WebviewManager"," setOnKeyListener webView.canGoBack() call-> back");
+//                                webView.goBack();
+//                            }
+//                            else
+                                {
+                                Log.w("WebviewManager"," setOnKeyListener invokeMethod call-> back");
                                 FlutterWebviewPlugin.channel.invokeMethod("onBack", null);
                             }
+
                             return true;
                     }
                 }
@@ -161,6 +168,7 @@ class WebviewManager {
                 return false;
             }
         });
+
 
         ((ObservableWebView) webView).setOnScrollChangedCallback(new ObservableWebView.OnScrollChangedCallback() {
             public void onScroll(int x, int y, int oldx, int oldy) {
@@ -392,7 +400,7 @@ class WebviewManager {
 
         webView.getSettings().setSupportMultipleWindows(supportMultipleWindows);
 
-        webView.getSettings().setAppCacheEnabled(appCacheEnabled);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
         webView.getSettings().setAllowFileAccessFromFileURLs(allowFileURLs);
         webView.getSettings().setAllowUniversalAccessFromFileURLs(allowFileURLs);
@@ -498,6 +506,7 @@ class WebviewManager {
      * Navigates back on the Webview.
      */
     void back(MethodCall call, MethodChannel.Result result) {
+        Log.w("WebviewManager"," back button click -> back");
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
         }

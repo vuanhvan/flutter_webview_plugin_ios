@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+
+
 
 const kAndroidUserAgent =
     'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _onDestroy = flutterWebViewPlugin.onDestroy.listen((_) {
       if (mounted) {
         // Actions like show a info toast.
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: const Text('Webview Destroyed')));
       }
     });
@@ -226,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(24.0),
               child: TextField(controller: _urlCtrl),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 flutterWebViewPlugin.launch(
                   selectedUrl,
@@ -239,19 +240,19 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('Open Webview (rect)'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 flutterWebViewPlugin.launch(selectedUrl, hidden: true);
               },
               child: const Text('Open "hidden" Webview'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 flutterWebViewPlugin.launch(selectedUrl);
               },
               child: const Text('Open Fullscreen Webview'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pushNamed('/widget');
               },
@@ -261,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(24.0),
               child: TextField(controller: _codeCtrl),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 final future =
                     flutterWebViewPlugin.evalJavascript(_codeCtrl.text);
@@ -273,7 +274,18 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('Eval some javascript'),
             ),
-            RaisedButton(
+            ElevatedButton(
+              onPressed: () {
+                final future = flutterWebViewPlugin.evalJavascript('alert("Hello World");');
+                future.then((String result) {
+                  setState(() {
+                    _history.add('eval: $result');
+                  });
+                });
+              },
+              child: const Text('Eval javascript alert()'),
+            ),
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   _history.clear();
@@ -282,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('Close'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 flutterWebViewPlugin.getCookies().then((m) {
                   setState(() {

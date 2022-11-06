@@ -1,15 +1,17 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:integration_test/integration_test.dart';
 import 'package:mockito/mockito.dart';
 
 void main() {
-  MockMethodChannel methodChannel;
-  FlutterWebviewPlugin webview;
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  late MockMethodChannel methodChannel;
+  late FlutterWebviewPlugin webview;
 
   setUp(() {
     methodChannel = MockMethodChannel();
-    webview = new FlutterWebviewPlugin.private(methodChannel);
+    webview = FlutterWebviewPlugin.private(methodChannel);
   });
 
   group('Method channel invoke', () {
