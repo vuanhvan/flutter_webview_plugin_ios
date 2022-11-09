@@ -196,7 +196,7 @@ class WebviewManager {
 
 
 
-                WebView newWebView = new WebView(context);
+                WebView newWebView = new WebView(activity);
                 newWebView.getSettings().setJavaScriptEnabled(true);
                 newWebView.getSettings().setSupportZoom(true);
                 newWebView.getSettings().setBuiltInZoomControls(true);

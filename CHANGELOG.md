@@ -1,4 +1,4 @@
-# 0.3.11+5
+# 0.3.11+6
 - fixed multiple windows in android
 
 # 0.3.11
