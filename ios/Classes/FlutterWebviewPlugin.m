@@ -394,7 +394,24 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
     BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
 
-    if navigationAction.navigationType == .linkActivated  {
+
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+            if (navigationAction.request.URL) {
+                NSLog(@"%@", navigationAction.request.URL.host);
+                if (![navigationAction.request.URL.resourceSpecifier containsString:_initialURL] && _handleLinksExternally) {
+                    if ([[UIApplication sharedApplication] canOpenURL:navigationAction.request.URL]) {
+                        [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
+                        decisionHandler(WKNavigationActionPolicyCancel);
+                    }
+                } else {
+                    decisionHandler(WKNavigationActionPolicyAllow);
+                }
+            }
+        } else {
+            decisionHandler(WKNavigationActionPolicyAllow);
+        }
+
+    if (navigationAction.navigationType == .linkActivated)  {
              if let url = navigationAction.request.url,
                  let host = url.host, !host.hasPrefix(_initialURL),
                  UIApplication.shared.canOpenURL(url), _handleLinksExternally {
