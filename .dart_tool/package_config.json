@@ -302,13 +302,13 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "flutter_webview_plugin",
+      "name": "flutter_webview_plugin_ios_android",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-11-06T07:48:26.530009Z",
+  "generated": "2022-11-06T12:16:31.953380Z",
   "generator": "pub",
   "generatorVersion": "2.18.0"
 }

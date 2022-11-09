@@ -18,7 +18,7 @@ public final class GeneratedPluginRegistrant {
     try {
       flutterEngine.getPlugins().add(new com.flutter_webview_plugin.FlutterWebviewPlugin());
     } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_webview_plugin, com.flutter_webview_plugin.FlutterWebviewPlugin", e);
+      Log.e(TAG, "Error registering plugin flutter_webview_plugin_ios_android, com.flutter_webview_plugin.FlutterWebviewPlugin", e);
     }
   }
 }

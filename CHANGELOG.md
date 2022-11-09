@@ -1,3 +1,10 @@
+# 0.3.11+5
+- fixed multiple windows in android
+
+# 0.3.11
+- fixed android embedding issue 
+- fixed ios not retaining session on webviews issue
+
 # 0.3.10+1
 - fixed android build
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_webview_plugin/src/javascript_channel.dart';
+import 'package:flutter_webview_plugin_ios_android/src/javascript_channel.dart';
 
 import 'javascript_message.dart';
 

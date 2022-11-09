@@ -198,7 +198,7 @@ integration_test
 2.12
 file:///Users/siddhantparashar/Documents/development/flutter/packages/integration_test/
 file:///Users/siddhantparashar/Documents/development/flutter/packages/integration_test/lib/
-flutter_webview_plugin
+flutter_webview_plugin_ios_android
 2.16
 file:///Users/siddhantparashar/StudioProjects/SkySoft/flutter_webview_plugin_ios/
 file:///Users/siddhantparashar/StudioProjects/SkySoft/flutter_webview_plugin_ios/lib/

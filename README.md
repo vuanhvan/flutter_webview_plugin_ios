@@ -4,6 +4,21 @@
 
 [![pub package](https://img.shields.io/pub/v/flutter_webview_plugin.svg)](https://pub.dartlang.org/packages/flutter_webview_plugin)
 
+
+# About
+Hi I am Siddhant Parashar, I am publishing this package as a fork from https://pub.dartlang.org/packages/flutter_webview_plugin
+
+This fork overcomes 2 major issues in android and ios
+
+On Android  have fixed it majorly android old embedding issue
+
+On iOS webviews did not retain their sessions across, This resulted in users getting logged out automatically on every render of webview,  have majorly fixed that issue on iOS.
+
+
+###### Buy me a coffee at - https://www.buymeacoffee.com/siddhant12p ;)
+
+### About Plugin
+
 Plugin that allows Flutter to communicate with a native WebView.
 
 **_Warning:_**

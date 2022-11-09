@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_webview_plugin_ios_android/flutter_webview_plugin_ios_android.dart';
 
 
 
@@ -14,7 +14,7 @@ String selectedUrl = 'https://flutter.io';
 final Set<JavascriptChannel> jsChannels = [
   JavascriptChannel(
       name: 'Print',
-      onMessageReceived: (JavascriptMessage message) {
+      onMessageReceived: (message) {
         print(message.message);
       }),
 ].toSet();

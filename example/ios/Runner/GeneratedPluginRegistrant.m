@@ -6,10 +6,10 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<flutter_webview_plugin/FlutterWebviewPlugin.h>)
-#import <flutter_webview_plugin/FlutterWebviewPlugin.h>
+#if __has_include(<flutter_webview_plugin_ios_android/FlutterWebviewPlugin.h>)
+#import <flutter_webview_plugin_ios_android/FlutterWebviewPlugin.h>
 #else
-@import flutter_webview_plugin;
+@import flutter_webview_plugin_ios_android;
 #endif
 
 @implementation GeneratedPluginRegistrant
