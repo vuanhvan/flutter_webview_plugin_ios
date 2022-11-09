@@ -1,4 +1,7 @@
-# 0.3.11+6
+# 0.3.11+9
+- added podspec for ios
+
+# 0.3.11+7
 - fixed multiple windows in android
 
 # 0.3.11

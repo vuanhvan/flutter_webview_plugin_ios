@@ -7,6 +7,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 @interface FlutterWebviewPlugin() <WKNavigationDelegate, UIScrollViewDelegate, WKUIDelegate> {
     BOOL _enableAppScheme;
     BOOL _enableZoom;
+    NSString* _urlPrefixToOpenLocally;
     NSString* _invalidUrlRegex;
     NSMutableSet* _javaScriptChannelNames;
     NSNumber*  _ignoreSSLErrors;
@@ -92,6 +93,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     NSNumber *hidden = call.arguments[@"hidden"];
     NSDictionary *rect = call.arguments[@"rect"];
     _enableAppScheme = call.arguments[@"enableAppScheme"];
+    _urlPrefixToOpenLocally = call.arguments[@"urlPrefixToOpenLocally"];
     NSString *userAgent = call.arguments[@"userAgent"];
     NSNumber *withZoom = call.arguments[@"withZoom"];
     NSNumber *scrollBar = call.arguments[@"scrollBar"];
@@ -388,33 +390,77 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 
-    BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
-    
-    id data = @{@"url": navigationAction.request.URL.absoluteString,
-                @"type": isInvalid ? @"abortLoad" : @"shouldStart",
-                @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
-    [channel invokeMethod:@"onState" arguments:data];
 
-    if (navigationAction.navigationType == WKNavigationTypeBackForward) {
-        [channel invokeMethod:@"onBackPressed" arguments:nil];
-    } else if (!isInvalid) {
-        id data = @{@"url": navigationAction.request.URL.absoluteString};
-        [channel invokeMethod:@"onUrlChanged" arguments:data];
-    }
+       if navigationAction.navigationType == .linkActivated  {
+                if let url = navigationAction.request.url,
+                    let host = url.host, !host.hasPrefix(_urlPrefixToOpenLocally),
+                    UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                    print(url)
+                    print("Redirected to browser. No need to open it locally")
+                    decisionHandler(.cancel)
+                    return
+                } else {
+                    BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
 
-    if (_enableAppScheme ||
-        ([webView.URL.scheme isEqualToString:@"http"] ||
-         [webView.URL.scheme isEqualToString:@"https"] ||
-         [webView.URL.scheme isEqualToString:@"about"] ||
-         [webView.URL.scheme isEqualToString:@"file"])) {
-         if (isInvalid) {
-            decisionHandler(WKNavigationActionPolicyCancel);
-         } else {
-            decisionHandler(WKNavigationActionPolicyAllow);
-         }
-    } else {
-        decisionHandler(WKNavigationActionPolicyCancel);
-    }
+                      id data = @{@"url": navigationAction.request.URL.absoluteString,
+                                  @"type": isInvalid ? @"abortLoad" : @"shouldStart",
+                                  @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
+                      [channel invokeMethod:@"onState" arguments:data];
+
+                      if (navigationAction.navigationType == WKNavigationTypeBackForward) {
+                          [channel invokeMethod:@"onBackPressed" arguments:nil];
+                      } else if (!isInvalid) {
+                          id data = @{@"url": navigationAction.request.URL.absoluteString};
+                          [channel invokeMethod:@"onUrlChanged" arguments:data];
+                      }
+
+                      if (_enableAppScheme ||
+                          ([webView.URL.scheme isEqualToString:@"http"] ||
+                           [webView.URL.scheme isEqualToString:@"https"] ||
+                           [webView.URL.scheme isEqualToString:@"about"] ||
+                           [webView.URL.scheme isEqualToString:@"file"])) {
+                           if (isInvalid) {
+                              decisionHandler(WKNavigationActionPolicyCancel);
+                           } else {
+                              decisionHandler(WKNavigationActionPolicyAllow);
+                           }
+                      } else {
+                          decisionHandler(WKNavigationActionPolicyCancel);
+                      }  BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
+
+                           id data = @{@"url": navigationAction.request.URL.absoluteString,
+                                       @"type": isInvalid ? @"abortLoad" : @"shouldStart",
+                                       @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
+                           [channel invokeMethod:@"onState" arguments:data];
+
+                           if (navigationAction.navigationType == WKNavigationTypeBackForward) {
+                               [channel invokeMethod:@"onBackPressed" arguments:nil];
+                           } else if (!isInvalid) {
+                               id data = @{@"url": navigationAction.request.URL.absoluteString};
+                               [channel invokeMethod:@"onUrlChanged" arguments:data];
+                           }
+
+                           if (_enableAppScheme ||
+                               ([webView.URL.scheme isEqualToString:@"http"] ||
+                                [webView.URL.scheme isEqualToString:@"https"] ||
+                                [webView.URL.scheme isEqualToString:@"about"] ||
+                                [webView.URL.scheme isEqualToString:@"file"])) {
+                                if (isInvalid) {
+                                   decisionHandler(WKNavigationActionPolicyCancel);
+                                } else {
+                                   decisionHandler(WKNavigationActionPolicyAllow);
+                                }
+                           } else {
+                               decisionHandler(WKNavigationActionPolicyCancel);
+                           }
+                    return
+                }
+            } else {
+                print("not a user click")
+                decisionHandler(.allow)
+                return
+            }
 }
 
 - (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
