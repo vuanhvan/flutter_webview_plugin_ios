@@ -29,6 +29,7 @@ import androidx.core.content.FileProvider;
 import android.database.Cursor;
 import android.provider.OpenableColumns;
 
+import java.io.Console;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,8 +196,10 @@ class WebviewManager {
                                           boolean isUserGesture, Message resultMsg) {
 
 
-
+                System.out.println("start new webvew");
                 WebView newWebView = new WebView(activity);
+                System.out.println("context new webvew");
+
                 newWebView.getSettings().setJavaScriptEnabled(true);
                 newWebView.getSettings().setSupportZoom(true);
                 newWebView.getSettings().setBuiltInZoomControls(true);
