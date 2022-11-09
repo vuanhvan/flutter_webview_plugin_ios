@@ -196,19 +196,39 @@ class WebviewManager {
                                           boolean isUserGesture, Message resultMsg) {
 
 
-                System.out.println("start new webvew");
+                System.out.println("P-1 start new webvew");
                 WebView newWebView = new WebView(activity);
-                System.out.println("context new webvew");
+                System.out.println("P-2 context new webvew");
 
                 newWebView.getSettings().setJavaScriptEnabled(true);
+
+                System.out.println("P-3 setJavaScriptEnabled");
+
+
                 newWebView.getSettings().setSupportZoom(true);
+                System.out.println("P-4 setJavaScriptEnabled");
+
                 newWebView.getSettings().setBuiltInZoomControls(true);
+                System.out.println("P-5 setJavaScriptEnabled");
+
                 newWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+                System.out.println("P-6 setJavaScriptEnabled");
+
                 newWebView.getSettings().setSupportMultipleWindows(true);
+                System.out.println("P-7 setJavaScriptEnabled");
+
                 view.addView(newWebView);
+                System.out.println("P-8 setJavaScriptEnabled");
+
                 WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+                System.out.println("P-9 setJavaScriptEnabled");
+
                 transport.setWebView(newWebView);
+                System.out.println("P-10 setJavaScriptEnabled");
+
                 resultMsg.sendToTarget();
+                System.out.println("P-11 setJavaScriptEnabled");
+
 
                 newWebView.setWebViewClient(new WebViewClient() {
                     @Override
