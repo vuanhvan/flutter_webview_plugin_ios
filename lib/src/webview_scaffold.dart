@@ -42,7 +42,6 @@ class WebviewScaffold extends StatefulWidget {
     this.geolocationEnabled,
     this.debuggingEnabled = false,
     this.ignoreSSLErrors = false,
-    this.urlPrefixToOpenLocally,
   }) : super(key: key);
 
   final PreferredSizeWidget? appBar;
@@ -77,7 +76,6 @@ class WebviewScaffold extends StatefulWidget {
   final bool? useWideViewPort;
   final bool? debuggingEnabled;
   final bool? ignoreSSLErrors;
-  final String? urlPrefixToOpenLocally;
 
   @override
   _WebviewScaffoldState createState() => _WebviewScaffoldState();
@@ -189,7 +187,6 @@ class _WebviewScaffoldState extends State<WebviewScaffold> {
               geolocationEnabled: widget.geolocationEnabled,
               debuggingEnabled: widget.debuggingEnabled,
               ignoreSSLErrors: widget.ignoreSSLErrors,
-                urlPrefixToOpenLocally: widget.urlPrefixToOpenLocally,
             );
           } else {
             if (_rect != value) {

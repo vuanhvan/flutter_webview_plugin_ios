@@ -110,7 +110,6 @@ class FlutterWebviewPlugin {
 
   Stream<WebViewHttpError> get onHttpError => _onHttpError.stream;
 
-
   /// Start the Webview with [url]
   /// - [headers] specify additional HTTP headers
   /// - [withJavascript] enable Javascript or not for the Webview
@@ -168,7 +167,6 @@ class FlutterWebviewPlugin {
         bool? geolocationEnabled,
         bool? debuggingEnabled,
         bool? ignoreSSLErrors,
-        String? urlPrefixToOpenLocally,
       }) async {
     final args = <String, dynamic>{
       'url': url,
@@ -194,7 +192,6 @@ class FlutterWebviewPlugin {
       'withOverviewMode': withOverviewMode ?? false,
       'debuggingEnabled': debuggingEnabled ?? false,
       'ignoreSSLErrors': ignoreSSLErrors ?? false,
-      'urlPrefixToOpenLocally': urlPrefixToOpenLocally,
     };
 
     if (headers != null) {
