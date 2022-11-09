@@ -230,12 +230,10 @@ class WebviewManager {
                 System.out.println("P-11 setJavaScriptEnabled");
 
 
-                newWebView.setWebViewClient(new WebViewClient() {
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        view.loadUrl(url);
-                        return true;
-                    }
+                newWebView.setWebChromeClient(new WebChromeClient() {
+
+
+
                 });
 
                 return true;
