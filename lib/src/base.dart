@@ -110,7 +110,6 @@ class FlutterWebviewPlugin {
 
   Stream<WebViewHttpError> get onHttpError => _onHttpError.stream;
 
-  String urlPrefixToOpenLocally
 
   /// Start the Webview with [url]
   /// - [headers] specify additional HTTP headers
