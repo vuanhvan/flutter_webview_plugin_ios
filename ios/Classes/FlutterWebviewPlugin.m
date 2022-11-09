@@ -395,73 +395,48 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     BOOL isInvalid = [self checkInvalidUrl: navigationAction.request.URL];
 
 
-    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-            if (navigationAction.request.URL) {
-                NSLog(@"%@", navigationAction.request.URL.host);
-                if (![navigationAction.request.URL.resourceSpecifier containsString:_initialURL] && _handleLinksExternally) {
-                    if ([[UIApplication sharedApplication] canOpenURL:navigationAction.request.URL]) {
-                        [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
-                        decisionHandler(WKNavigationActionPolicyCancel);
-                    }
-                } else {
-                    decisionHandler(WKNavigationActionPolicyAllow);
+ id data = @{@"url": navigationAction.request.URL.absoluteString,
+                         @"type": isInvalid ? @"abortLoad" : @"shouldStart",
+                         @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
+             [channel invokeMethod:@"onState" arguments:data];
 
-                     id data = @{@"url": navigationAction.request.URL.absoluteString,
-                                             @"type": isInvalid ? @"abortLoad" : @"shouldStart",
-                                             @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
-                                 [channel invokeMethod:@"onState" arguments:data];
+             if (navigationAction.navigationType == WKNavigationTypeBackForward) {
+                 [channel invokeMethod:@"onBackPressed" arguments:nil];
+             } else if (!isInvalid) {
+                 id data = @{@"url": navigationAction.request.URL.absoluteString};
+                 [channel invokeMethod:@"onUrlChanged" arguments:data];
+             }
 
-                                 if (navigationAction.navigationType == WKNavigationTypeBackForward) {
-                                     [channel invokeMethod:@"onBackPressed" arguments:nil];
-                                 } else if (!isInvalid) {
-                                     id data = @{@"url": navigationAction.request.URL.absoluteString};
-                                     [channel invokeMethod:@"onUrlChanged" arguments:data];
-                                 }
+             if (_enableAppScheme ||
+                 ([webView.URL.scheme isEqualToString:@"http"] ||
+                  [webView.URL.scheme isEqualToString:@"https"] ||
+                  [webView.URL.scheme isEqualToString:@"about"] ||
+                  [webView.URL.scheme isEqualToString:@"file"])) {
+                  if (isInvalid) {
+                     decisionHandler(WKNavigationActionPolicyCancel);
+                  } else {
 
-                                 if (_enableAppScheme ||
-                                     ([webView.URL.scheme isEqualToString:@"http"] ||
-                                      [webView.URL.scheme isEqualToString:@"https"] ||
-                                      [webView.URL.scheme isEqualToString:@"about"] ||
-                                      [webView.URL.scheme isEqualToString:@"file"])) {
-                                      if (isInvalid) {
-                                         decisionHandler(WKNavigationActionPolicyCancel);
-                                      } else {
-                                         decisionHandler(WKNavigationActionPolicyAllow);
+
+                    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+                              if (navigationAction.request.URL) {
+                                  NSLog(@"%@", navigationAction.request.URL.host);
+                                  if (![navigationAction.request.URL.resourceSpecifier containsString:_initialURL] && _handleLinksExternally) {
+                                      if ([[UIApplication sharedApplication] canOpenURL:navigationAction.request.URL]) {
+                                          [[UIApplication sharedApplication] openURL:navigationAction.request.URL];
+                                          decisionHandler(WKNavigationActionPolicyCancel);
                                       }
-                                 } else {
-                                     decisionHandler(WKNavigationActionPolicyCancel);
-                                 }
-                }
-            }
-        } else {
-            decisionHandler(WKNavigationActionPolicyAllow);
-
-             id data = @{@"url": navigationAction.request.URL.absoluteString,
-                                     @"type": isInvalid ? @"abortLoad" : @"shouldStart",
-                                     @"navigationType": [NSNumber numberWithInteger:navigationAction.navigationType]};
-                         [channel invokeMethod:@"onState" arguments:data];
-
-                         if (navigationAction.navigationType == WKNavigationTypeBackForward) {
-                             [channel invokeMethod:@"onBackPressed" arguments:nil];
-                         } else if (!isInvalid) {
-                             id data = @{@"url": navigationAction.request.URL.absoluteString};
-                             [channel invokeMethod:@"onUrlChanged" arguments:data];
-                         }
-
-                         if (_enableAppScheme ||
-                             ([webView.URL.scheme isEqualToString:@"http"] ||
-                              [webView.URL.scheme isEqualToString:@"https"] ||
-                              [webView.URL.scheme isEqualToString:@"about"] ||
-                              [webView.URL.scheme isEqualToString:@"file"])) {
-                              if (isInvalid) {
-                                 decisionHandler(WKNavigationActionPolicyCancel);
-                              } else {
-                                 decisionHandler(WKNavigationActionPolicyAllow);
+                                  } else {
+                                      decisionHandler(WKNavigationActionPolicyAllow);
+                                  }
                               }
-                         } else {
-                             decisionHandler(WKNavigationActionPolicyCancel);
-                         }
-        }
+                          } else {
+                              decisionHandler(WKNavigationActionPolicyAllow);
+                          }
+                  }
+             } else {
+                 decisionHandler(WKNavigationActionPolicyCancel);
+             }
+
 
 }
 
