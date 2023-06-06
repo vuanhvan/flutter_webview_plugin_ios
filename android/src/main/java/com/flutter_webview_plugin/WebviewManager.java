@@ -577,6 +577,7 @@ class WebviewManager {
         });
     }
 
+
     /**
      * Reloads the Webview.
      */
