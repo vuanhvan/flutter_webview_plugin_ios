@@ -3,19 +3,19 @@
   "packages": [
     {
       "name": "characters",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.1",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/characters-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.16.0",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/collection-1.17.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/packages/flutter",
+      "rootUri": "file:///Users/admin/Documents/developement/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -26,26 +26,32 @@
       "languageVersion": "2.16"
     },
     {
+      "name": "js",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/js-0.6.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.5",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.13"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.8.0",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/meta-1.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/admin/Documents/developement/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///Users/siddhantparashar/Documents/development/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -56,7 +62,7 @@
       "languageVersion": "2.10"
     }
   ],
-  "generated": "2022-11-09T14:31:41.280917Z",
+  "generated": "2023-06-06T05:43:34.650477Z",
   "generator": "pub",
-  "generatorVersion": "2.18.0"
+  "generatorVersion": "2.19.6"
 }

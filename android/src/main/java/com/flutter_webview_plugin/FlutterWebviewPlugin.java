@@ -340,6 +340,9 @@ public class FlutterWebviewPlugin implements FlutterPlugin, ActivityAware, Metho
         return false;
     }
 
+
+
+
 //    void static initPlugin(){
 //        channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
 //            final FlutterWebviewPlugin instance = new FlutterWebviewPlugin(registrar.activity(), registrar.activeContext());

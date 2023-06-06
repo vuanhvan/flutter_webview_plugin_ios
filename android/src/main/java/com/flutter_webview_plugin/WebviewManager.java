@@ -1,6 +1,8 @@
 package com.flutter_webview_plugin;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -24,6 +26,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.provider.MediaStore;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.database.Cursor;
@@ -50,6 +54,7 @@ import static android.app.Activity.RESULT_OK;
 
 class WebviewManager {
 
+    private static final int REQUEST_CODE_LOCATION = 44 ;
     private ValueCallback<Uri> mUploadMessage;
     private ValueCallback<Uri[]> mUploadMessageArray;
     private final static int FILECHOOSER_RESULTCODE = 1;
@@ -325,12 +330,29 @@ class WebviewManager {
                 FlutterWebviewPlugin.channel.invokeMethod("onProgressChanged", args);
             }
 
+            @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                callback.invoke(origin, true, false);
+                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // Show rationale and request permission
+                    ActivityCompat.requestPermissions(activity,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+                } else {
+                    // Permission already granted, allow geolocation
+                    callback.invoke(origin, true, false);
+                }
             }
+
+
+
+
+
         });
+
+
         registerJavaScriptChannelNames(channelNames);
     }
+
+
 
     private Uri getOutputFilename(String intentType) {
         String prefix = "";
@@ -478,6 +500,12 @@ class WebviewManager {
 
         if (geolocationEnabled) {
             webView.getSettings().setGeolocationEnabled(true);
+
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // Show rationale and request permission
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -620,3 +648,5 @@ class WebviewManager {
         }
     }
 }
+
+

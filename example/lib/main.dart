@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin_ios_android/flutter_webview_plugin_ios_android.dart';
 
-
-
 const kAndroidUserAgent =
     'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
 
@@ -231,6 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 flutterWebViewPlugin.launch(
                   selectedUrl,
+                  geolocationEnabled: true,
                   rect: Rect.fromLTWH(
                       0.0, 0.0, MediaQuery.of(context).size.width, 300.0),
                   userAgent: kAndroidUserAgent,
@@ -242,13 +241,20 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                flutterWebViewPlugin.launch(selectedUrl, hidden: true);
+                flutterWebViewPlugin.launch(
+                  selectedUrl,
+                  hidden: true,
+                  geolocationEnabled: true,
+                );
               },
               child: const Text('Open "hidden" Webview'),
             ),
             ElevatedButton(
               onPressed: () {
-                flutterWebViewPlugin.launch(selectedUrl);
+                flutterWebViewPlugin.launch(selectedUrl,
+                  geolocationEnabled: true,
+
+                );
               },
               child: const Text('Open Fullscreen Webview'),
             ),
@@ -276,7 +282,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                final future = flutterWebViewPlugin.evalJavascript('alert("Hello World");');
+                final future = flutterWebViewPlugin
+                    .evalJavascript('alert("Hello World");');
                 future.then((String result) {
                   setState(() {
                     _history.add('eval: $result');
