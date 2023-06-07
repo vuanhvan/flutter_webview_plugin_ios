@@ -1,3 +1,7 @@
+# 0.3.12+10
+- Fixed Location Permission on Android
+- updated minimum SDK version to 21
+
 # 0.3.11+9
 - added podspec for ios
 
