@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (_) => const MyHomePage(title: 'Flutter WebView Demo'),
+        '/': (_) => MyHomePage(title: 'Flutter WebView Demo'),
         '/widget': (_) {
           return WebviewScaffold(
             url: selectedUrl,
@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -96,21 +96,21 @@ class _MyHomePageState extends State<MyHomePage> {
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   // On destroy stream
-  StreamSubscription _onDestroy;
+  late StreamSubscription _onDestroy;
 
   // On urlChanged stream
-  StreamSubscription<String> _onUrlChanged;
+  late StreamSubscription<String> _onUrlChanged;
 
   // On urlChanged stream
-  StreamSubscription<WebViewStateChanged> _onStateChanged;
+  late StreamSubscription<WebViewStateChanged> _onStateChanged;
 
-  StreamSubscription<WebViewHttpError> _onHttpError;
+  late StreamSubscription<WebViewHttpError> _onHttpError;
 
-  StreamSubscription<double> _onProgressChanged;
+  late StreamSubscription<double> _onProgressChanged;
 
-  StreamSubscription<double> _onScrollYChanged;
+  late StreamSubscription<double> _onScrollYChanged;
 
-  StreamSubscription<double> _onScrollXChanged;
+  late StreamSubscription<double> _onScrollXChanged;
 
   final _urlCtrl = TextEditingController(text: selectedUrl);
 
@@ -272,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 final future =
                     flutterWebViewPlugin.evalJavascript(_codeCtrl.text);
-                future.then((String result) {
+                future.then(( result) {
                   setState(() {
                     _history.add('eval: $result');
                   });
@@ -284,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 final future = flutterWebViewPlugin
                     .evalJavascript('alert("Hello World");');
-                future.then((String result) {
+                future.then(( result) {
                   setState(() {
                     _history.add('eval: $result');
                   });

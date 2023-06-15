@@ -1,6 +1,7 @@
 package com.flutter_webview_plugin;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +17,10 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -37,14 +40,7 @@ public class FlutterWebviewPlugin implements FlutterPlugin, ActivityAware, Metho
     private static final String CHANNEL_NAME = "flutter_webview_plugin";
     private static final String JS_CHANNEL_NAMES_FIELD = "javascriptChannelNames";
 
-    public static void registerWith(PluginRegistry.Registrar registrar) {
-        if (registrar.activity() != null) {
-            channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-            final FlutterWebviewPlugin instance = new FlutterWebviewPlugin(registrar.activity(), registrar.activeContext());
-            registrar.addActivityResultListener(instance);
-            channel.setMethodCallHandler(instance);
-        }
-    }
+
 
 //   static void initPlugin(@NonNull BinaryMessenger messenger,Activity activity, Context context){
 //            channel = new MethodChannel(messenger, CHANNEL_NAME);
@@ -56,9 +52,12 @@ public class FlutterWebviewPlugin implements FlutterPlugin, ActivityAware, Metho
     public FlutterWebviewPlugin(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
+
+        System.out.println("FlutterWebviewPlugin2 constructor");
+
     }
     public FlutterWebviewPlugin() {
-
+        System.out.println("FlutterWebviewPlugin constructor");
     }
 
     @Override
@@ -144,13 +143,15 @@ public class FlutterWebviewPlugin implements FlutterPlugin, ActivityAware, Metho
         boolean debuggingEnabled = call.argument("debuggingEnabled");
         boolean ignoreSSLErrors = call.argument("ignoreSSLErrors");
 
+        System.out.println("openUrl called");
+
         if (webViewManager == null || webViewManager.closed == true) {
             Map<String, Object> arguments = (Map<String, Object>) call.arguments;
             List<String> channelNames = new ArrayList();
             if (arguments.containsKey(JS_CHANNEL_NAMES_FIELD)) {
                 channelNames = (List<String>) arguments.get(JS_CHANNEL_NAMES_FIELD);
             }
-            webViewManager = new WebviewManager(activity, context, channelNames);
+            webViewManager = new WebviewManager(activity,context, channelNames);
         }
 
         FrameLayout.LayoutParams params = buildLayoutParams(call);
@@ -355,7 +356,9 @@ public class FlutterWebviewPlugin implements FlutterPlugin, ActivityAware, Metho
         channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
         context = binding.getApplicationContext();
 
-        channel.setMethodCallHandler(this);
+        System.out.println("onAttachedToEngine");
+
+
 
         //final FlutterWebviewPlugin instance = new FlutterWebviewPlugin(registrar.activity(), registrar.activeContext());
         //registrar.addActivityResultListener(instance);
@@ -370,6 +373,13 @@ public class FlutterWebviewPlugin implements FlutterPlugin, ActivityAware, Metho
     public void onAttachedToActivity(ActivityPluginBinding binding) {
         activity = binding.getActivity();
         binding.addActivityResultListener(this);
+
+        FlutterWebviewPlugin instance = new FlutterWebviewPlugin(activity, context);
+        channel.setMethodCallHandler(instance);
+
+
+
+
     }
 
     @Override

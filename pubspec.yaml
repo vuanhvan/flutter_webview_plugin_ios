@@ -2,7 +2,7 @@ name: flutter_webview_plugin_ios_android
 description: Plugin that allow Flutter to communicate with a native Webview and keeps .
 
 homepage: https://github.com/ec-siddhant/flutter_webview_plugin_ios
-version: 0.3.12+10
+version: 0.3.12+11
 maintainer: Siddhant Parashar
 
 environment:
@@ -21,6 +21,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
+  geolocator: ^9.0.2
+
 
 dev_dependencies:
   mockito: ^5.2.0

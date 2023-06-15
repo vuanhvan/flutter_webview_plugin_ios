@@ -34,13 +34,13 @@ allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // NOTE(jeffmikels): When targetSdkVersion or minSdkVersion is not set or < 4, gradle adds 
         // additional scary permissions such as WRITE_EXTERNAL_STORAGE and READ_PHONE_STATE.
-        minSdkVersion 21
+        minSdkVersion 24
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -53,10 +53,17 @@ android {
     }
 }
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation "androidx.activity:activity:1.2.0"
+    implementation "androidx.fragment:fragment:1.3.0"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-	testImplementation 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'androidx.test:core:1.4.0'
+
+//    implementation 'com.github.jianastrero:capiche:1.0'
+
 
 //    When running unit tests for project, gradle needs to have flutter.jar in path
 //    since there's no FLUTTER_HOME variable, we need to pass flutterPath from console with command:

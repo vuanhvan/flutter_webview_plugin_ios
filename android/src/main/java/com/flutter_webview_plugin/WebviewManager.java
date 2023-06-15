@@ -22,10 +22,12 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.provider.MediaStore;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -33,7 +35,6 @@ import androidx.core.content.FileProvider;
 import android.database.Cursor;
 import android.provider.OpenableColumns;
 
-import java.io.Console;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import java.util.Date;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -60,6 +62,15 @@ class WebviewManager {
     private final static int FILECHOOSER_RESULTCODE = 1;
     private Uri fileUri;
     private Uri videoUri;
+
+
+    String[] permissions = new String[]{
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private static final int PERMISSIONS_REQUEST_CODE = 1234;
+
+
 
     private long getFileSize(Uri fileUri) {
         Cursor returnCursor = context.getContentResolver().query(fileUri, null, null, null, null);
@@ -332,13 +343,19 @@ class WebviewManager {
 
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // Show rationale and request permission
-                    ActivityCompat.requestPermissions(activity,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+                System.out.println("nkonGeolocationPermissionsShowPrompt");
+
+
+                if (!checkAllPermissionsGranted()) {
+                    System.out.println("no permission granted");
+                    requestPermissions(callback,origin);
                 } else {
-                    // Permission already granted, allow geolocation
+                    System.out.println("permissions already granted");
+
                     callback.invoke(origin, true, false);
+
+                    // All permissions are already granted
+                    // TODO: your code to handle when permissions are already granted
                 }
             }
 
@@ -500,12 +517,46 @@ class WebviewManager {
 
         if (geolocationEnabled) {
             webView.getSettings().setGeolocationEnabled(true);
-
-            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // Show rationale and request permission
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
-            }
+//
+//
+//
+//            AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+//            System.out.println("onAttachedToActivity");
+//
+//            locationPermissionRequest = appCompatActivity.registerForActivityResult(
+//                    new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+//                        Boolean fineLocationGranted = result.getOrDefault(
+//                                Manifest.permission.ACCESS_FINE_LOCATION, false);
+//                        Boolean coarseLocationGranted = result.getOrDefault(
+//                                Manifest.permission.ACCESS_COARSE_LOCATION,false);
+//                        if (fineLocationGranted != null && fineLocationGranted) {
+//                            // Precise location access granted.
+//                        } else if (coarseLocationGranted != null && coarseLocationGranted) {
+//                            // Only approximate location access granted.
+//                        } else {
+//                            // No location access granted.
+//                        }
+//                    }
+//            );
+//
+//            locationPermissionRequest.launch(new String[]{
+//                    Manifest.permission.ACCESS_FINE_LOCATION,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION
+//            });
+//
+//
+//
+//            System.out.println("Geolocation Enabled");
+//            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                // Permission not granted, request it
+//                System.out.println("Asking Geolocation Permission");
+//                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+//                System.out.println("ASKED Geolocation Permission");
+//
+//            } else {
+//                // Permission already granted
+//                System.out.println("Geolocation Permission already granted");
+//            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -647,6 +698,22 @@ class WebviewManager {
         if (webView != null) {
             webView.stopLoading();
         }
+    }
+
+    // Function to check if all permissions are granted
+    private boolean checkAllPermissionsGranted() {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void requestPermissions(GeolocationPermissions.Callback callback, String origin) {
+        ActivityCompat.requestPermissions(activity, permissions, PERMISSIONS_REQUEST_CODE);
+        callback.invoke(origin, true, false);
     }
 }
 
